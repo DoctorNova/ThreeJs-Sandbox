@@ -1,0 +1,30 @@
+{
+  "name": "threejs-learning",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DoctorNova/ThreeJs-Sandbox.git"
+  },
+  "author": "Sebastian Paas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DoctorNova/ThreeJs-Sandbox/issues"
+  },
+  "homepage": "https://github.com/DoctorNova/ThreeJs-Sandbox#readme",
+  "devDependencies": {
+    "@types/three": "^0.178.1",
+    "typescript": "^5.9.2",
+    "vite": "^7.0.6"
+  },
+  "dependencies": {
+    "open-simplex-noise": "^2.5.0",
+    "three": "^0.179.0"
+  }
+}

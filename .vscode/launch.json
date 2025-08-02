@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Dev Server + Chrome Debug",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5173", // Change this if your dev server runs on another port
+      "webRoot": "${workspaceFolder}/src", // Adjust to where your source files live
+      "preLaunchTask": "npm: dev",
+      "postDebugTask": "Terminate task",
+      "runtimeArgs": ["--remote-debugging-port=9222"]
+    }
+  ]
+}
