@@ -10,6 +10,12 @@ let renderer: WebGLRenderer;
 let onEachFrame: EngineFrameCallback;
 let clock: Clock;
 
+let mTime = 0;
+
+function GetTime() {
+  return mTime;
+}
+
 function Initialize(canvas: HTMLElement) {
   renderer = new WebGLRenderer({ antialias: true, canvas });
   renderer.setClearColor(0xff000000);
@@ -32,7 +38,8 @@ function OnEachFrame(callback?: EngineFrameCallback) {
 }
 
 function Render(scene: Scene, camera: Camera) {
-  renderer.setAnimationLoop(() => {
+  renderer.setAnimationLoop((time) => {
+    mTime = time / 1000;
     onEachFrame?.(clock.getDelta());
     renderer.render(scene, camera);
   });
@@ -53,4 +60,5 @@ export const RendererSetup = {
   OnShutdown,
   OnEachFrame,
   GetRenderer,
+  GetTime,
 };
