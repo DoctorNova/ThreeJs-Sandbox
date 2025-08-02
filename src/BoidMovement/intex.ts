@@ -15,6 +15,7 @@ const DefaultBoidSettings = {
     anchor: 1,
   },
   anchorPoint: new Vector3(0, 0, 0),
+  collisionRange: 1,
   visualRange: 10,
 }
 
@@ -27,7 +28,7 @@ function Steer(settings: typeof DefaultBoidSettings, all: Agent[], agent: Agent,
   const visualRangeSq = settings.visualRange * settings.visualRange;
   const alignment = new AlignmentCalculator();
   const cohersion = new CohesionCalculator(agent);
-  const separation = new SeparationCalculator(agent, visualRangeSq);
+  const separation = new SeparationCalculator(agent, settings.collisionRange * settings.collisionRange);
 
   all.forEach(other => {
     if (other != agent && IsInVisualRange(visualRangeSq, agent, other)) {

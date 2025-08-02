@@ -44,9 +44,10 @@ export class Swarm {
 
       for (let i = 0; i < size; i++) {
         this.#objLoader.load(`/assets/${this.#path}.obj`, (root) => {
-          // Meshes be up-axis: +y and forward-axis: +z
+          const randomForward = new Vector3().randomDirection();
+          // Meshes must have up-axis: +y and forward-axis: +z
           // In the agents contructor it is then rotated to the given forward and up vector
-          const agent = new Agent(root, this.#forward, this.#up, this.#Steer.bind(this));
+          const agent = new Agent(root, randomForward, this.#up, this.#Steer.bind(this));
           root.position.copy(new Vector3().randomDirection().add(this.#spawnPosition));
           root.scale.copy(this.#initScale);
           this.#swarm.push(agent);
