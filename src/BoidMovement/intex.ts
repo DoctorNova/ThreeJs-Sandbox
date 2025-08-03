@@ -26,7 +26,7 @@ function IsInVisualRange(visualRangeSq: number, self: Agent, other: Agent) {
 
 function Steer(settings: typeof DefaultBoidSettings, all: Agent[], agent: Agent, deltaTime: number) {
   const visualRangeSq = settings.visualRange * settings.visualRange;
-  const alignment = new AlignmentCalculator();
+  const alignment = new AlignmentCalculator(agent, visualRangeSq);
   const cohersion = new CohesionCalculator(agent);
   const separation = new SeparationCalculator(agent, settings.collisionRange * settings.collisionRange);
 

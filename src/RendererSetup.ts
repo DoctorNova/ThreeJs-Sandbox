@@ -3,7 +3,7 @@ import { Clock } from "three/src/core/Clock.js";
 import { WebGLRenderer } from "three/src/renderers/WebGLRenderer.js";
 import type { Scene } from "three/src/scenes/Scene.js";
 
-type EngineCallback = () => void;
+type EngineCallback = (renderer: WebGLRenderer) => void;
 type EngineFrameCallback = undefined | ((frameTime: number) => void);
 
 let renderer: WebGLRenderer;
@@ -12,24 +12,28 @@ let clock: Clock;
 
 let mTime = 0;
 
+const resizeObservers = new Array<EngineCallback>();
+
 function GetTime() {
   return mTime;
 }
 
-function Initialize(canvas: HTMLElement) {
+function Create(canvas: HTMLElement) {
   renderer = new WebGLRenderer({ antialias: true, canvas });
-  renderer.setClearColor(0xff000000);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  window.addEventListener('resize', () => {
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
+}
 
-  clock = new Clock()
+function Initialize() {
+  renderer.setClearColor(0xff000000);
+  clock = new Clock();
+  resizeObservers.forEach(observer => observer(renderer));
 }
 
 function OnResize(callback?: EngineCallback) {
-  if (callback) {
-    window.addEventListener('resize', callback);
+  if (callback && renderer.domElement) {
+    const eventListener = () => callback(renderer);
+    const observer = new ResizeObserver(eventListener);
+    resizeObservers.push(eventListener);
+    observer.observe(renderer.domElement);
   }
 }
 
@@ -46,7 +50,7 @@ function Render(scene: Scene, camera: Camera) {
 }
 
 function OnShutdown(onShutdown: EngineCallback) {
-  window.addEventListener('beforeunload', () => onShutdown?.());
+  window.addEventListener('beforeunload', () => onShutdown?.(renderer));
 }
 
 function GetRenderer() {
@@ -54,6 +58,7 @@ function GetRenderer() {
 }
 
 export const RendererSetup = {
+  Create,
   Initialize,
   Render,
   OnResize,

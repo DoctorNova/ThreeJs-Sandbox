@@ -1,14 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>My first three.js app</title>
     <style>
-      body { margin: 0; }
+      body {
+        margin: 0;
+        height: 100vh;
+      }
     </style>
+    <link rel="stylesheet" href="assets/css/main.css" />
   </head>
   <body>
     <canvas id="display"></canvas>
+    <div id="loading">
+      <div class="info">
+        <div>...loading...</div>
+        <div class="progress"><div id="progressbar"></div></div>
+      </div>
+    </div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

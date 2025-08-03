@@ -1,4 +1,4 @@
-import type { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
+import type { AnimationClip } from "three";
 import { AnimationMixer } from "three/src/animation/AnimationMixer.js";
 import { LoopRepeat } from "three/src/constants.js";
 import type { Object3D } from "three/src/core/Object3D.js";
@@ -18,9 +18,9 @@ export class Agent {
   #currentDirectionArrow: ArrowHelper;
   #animationMixer: AnimationMixer;
 
-  constructor(gltf: GLTF, forward: Vector3, up: Vector3, steering: SteeringFunction) {
+  constructor(object: Object3D, swimAnimation: AnimationClip, forward: Vector3, up: Vector3, steering: SteeringFunction) {
     this.#id = Math.random() * 100;
-    this.object = gltf.scene;
+    this.object = object;
     this.#currentDirection = this.#desiredDirection = forward;
     this.#velocity = new Vector3(0, 0, 0);
 
@@ -39,7 +39,7 @@ export class Agent {
     this.steering = steering;
 
     this.#animationMixer = new AnimationMixer(this.object);
-    const action = this.#animationMixer.clipAction(gltf.animations[0]);
+    const action = this.#animationMixer.clipAction(swimAnimation);
     action.setLoop(LoopRepeat, Infinity);
     action.startAt(Math.random() * action.getEffectiveTimeScale());
     action.play();

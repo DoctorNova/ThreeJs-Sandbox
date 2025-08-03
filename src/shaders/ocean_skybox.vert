@@ -25,8 +25,10 @@ varying vec2 vUV;
 
 void main()
 {
-  vec4 pos = projectionMatrix * vec4(position, 1.0);
-  gl_Position = vec4(pos.xy, pos.w, pos.w); // z = w ⇒ depth = 1
+  // this only works with planes
+  // Mode range for plane [-0.5 to 0.5] to ndc [-1, 1]
+  vec3 pos = position * 2.0f;
+  gl_Position = vec4(pos.xy, 1, 1);
 
   vUV = uv;
 }

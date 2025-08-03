@@ -26,8 +26,9 @@ void main()
   vec3 color1 = vec3(0.1, 0.3, 0.5);
   vec3 color2 = vec3(0.788, 0.956, 1.0);
   float lookingUp = dot(normalize(iCameraForward), vec3(0, 1, 0));
+  float modifier = lookingUp * 0.5;
   vec2 ndc = vUV * 2.0 - 1.0;
-  vec3 background = mix(color1, color2, ndc.y + lookingUp * 0.5);
+  vec3 background = mix(color1, color2, ndc.y + modifier);
   vec3 lightColor = mix(color1, color2 * 0.75, 1.0 - ndc.y);
   float godrays = GodRays(ndc, vUV);
   background = mix(background, lightColor, (godrays + 0.05)/1.05);
