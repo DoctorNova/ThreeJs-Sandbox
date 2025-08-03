@@ -8,8 +8,8 @@ import { OceanSkybox } from './OceanSkybox';
 import { RendererSetup } from './RendererSetup';
 import { Swarm } from './Swarm';
 
-const scale = 0.05;
-const rainbowFish = new Swarm("boesemani_rainbow/Boesemani_Rainbow", new Vector3(0, 0, 0), new Vector3().randomDirection(), new Vector3(0, 1, 0), new Vector3(scale, scale, scale));
+const scale = 0.5;
+const rainbowFish = new Swarm("emperor_angelfish_glb.glb", new Vector3(0, 0, 0), new Vector3(0, 1, 0), new Vector3(scale, scale, scale));
 rainbowFish.speed = 1;
 
 export const scene = new Scene();

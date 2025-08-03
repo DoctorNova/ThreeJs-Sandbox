@@ -6,6 +6,7 @@ export class SeparationCalculator {
   #steering = new Vector3(0, 0);
   #self: Agent;
   #collisionDistanceSq: number;
+  #total = 0;
 
   constructor(self: Agent, collisionDistanceSq: number) {
     this.#self = self;
@@ -29,6 +30,7 @@ export class SeparationCalculator {
     diff.normalize();
     diff.multiplyScalar(weight);
     this.#steering.add(diff);
+    this.#total++;
   }
 
   CalculateResult(coefficient: number) {
@@ -36,6 +38,6 @@ export class SeparationCalculator {
       return new Vector3(0, 0, 0);
     }
 
-    return this.#steering.normalize().multiplyScalar(coefficient);
+    return this.#steering.multiplyScalar(coefficient / this.#total);
   }
 }

@@ -1,33 +1,30 @@
-import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
-import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Vector3 } from "three/src/math/Vector3.js";
 import { Agent } from './Agent';
 import { BoidMovement } from './BoidMovement/intex';
 import { scene } from './Game';
 
 export class Swarm {
-  #objLoader: OBJLoader;
-  #mtlLoader: MTLLoader;
+  #gltfLoader: GLTFLoader;
   #path: string;
   #swarm: Agent[] = [];
   speed = 10;
   #up: Vector3;
-  #forward: Vector3;
   #initScale: Vector3;
   #spawnPosition: Vector3;
+  #steeringSettings: typeof BoidMovement.DefaultBoidSettings;
 
-  constructor(path: string, spawnPosition: Vector3, forward: Vector3, up: Vector3, scale: Vector3) {
-    this.#objLoader = new OBJLoader();
-    this.#mtlLoader = new MTLLoader();
+  constructor(path: string, spawnPosition: Vector3, up: Vector3, scale: Vector3, steeringSettings = BoidMovement.DefaultBoidSettings) {
+    this.#gltfLoader = new GLTFLoader();
     this.#path = path;
     this.#initScale = scale;
     this.#up = up;
-    this.#forward = forward;
     this.#spawnPosition = spawnPosition;
+    this.#steeringSettings = steeringSettings;
   }
 
   #Steer(agent: Agent, deltaTime: number) {
-    return BoidMovement.Steer(BoidMovement.DefaultBoidSettings, this.#swarm, agent, deltaTime);
+    return BoidMovement.Steer(this.#steeringSettings, this.#swarm, agent, deltaTime);
   }
 
   Despawn() {
@@ -38,23 +35,43 @@ export class Swarm {
   }
 
   Spawn(size: number) {
-    this.#mtlLoader.load(`/assets/${this.#path}.mtl`, (mtl) => {
-      mtl.preload();
-      this.#objLoader.setMaterials(mtl);
-
-      for (let i = 0; i < size; i++) {
-        this.#objLoader.load(`/assets/${this.#path}.obj`, (root) => {
+    for (let i = 0; i < size; i++) {
+      // Load a glTF resource
+      this.#gltfLoader.load(
+        // resource URL
+        `/assets/${this.#path}`,
+        // called when the resource is loaded
+        (gltf) => {
           const randomForward = new Vector3().randomDirection();
           // Meshes must have up-axis: +y and forward-axis: +z
           // In the agents contructor it is then rotated to the given forward and up vector
-          const agent = new Agent(root, randomForward, this.#up, this.#Steer.bind(this));
-          root.position.copy(new Vector3().randomDirection().add(this.#spawnPosition));
-          root.scale.copy(this.#initScale);
+          const agent = new Agent(gltf, randomForward, this.#up, this.#Steer.bind(this));
+          gltf.scene.position.copy(new Vector3().randomDirection().add(this.#spawnPosition));
+          gltf.scene.scale.copy(this.#initScale);
           this.#swarm.push(agent);
-          scene.add(root);
-        });
-      }
-    });
+          scene.add(gltf.scene);
+
+          gltf.animations; // Array<THREE.AnimationClip>
+          gltf.scene; // THREE.Group
+          gltf.scenes; // Array<THREE.Group>
+          gltf.cameras; // Array<THREE.Camera>
+          gltf.asset; // Object
+
+        },
+        // called while loading is progressing
+        function (xhr) {
+
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+
+        },
+        // called when loading has errors
+        function (error) {
+
+          console.log('An error happened', error);
+
+        }
+      );
+    }
   }
 
   Update(frameTime: number) {

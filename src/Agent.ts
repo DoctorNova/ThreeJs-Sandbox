@@ -1,7 +1,9 @@
+import type { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { AnimationMixer } from "three/src/animation/AnimationMixer.js";
+import { LoopRepeat } from "three/src/constants.js";
 import type { Object3D } from "three/src/core/Object3D.js";
 import { ArrowHelper } from "three/src/helpers/ArrowHelper.js";
 import { Vector3 } from "three/src/math/Vector3.js";
-import { scene } from "./Game";
 
 export type SteeringFunction = (agent: Agent, deltaTime: number) => Vector3;
 
@@ -14,25 +16,33 @@ export class Agent {
   #desiredDirectionArrow: ArrowHelper;
   #velocity: Vector3;
   #currentDirectionArrow: ArrowHelper;
+  #animationMixer: AnimationMixer;
 
-  constructor(object: Object3D, forward: Vector3, up: Vector3, steering: SteeringFunction) {
+  constructor(gltf: GLTF, forward: Vector3, up: Vector3, steering: SteeringFunction) {
     this.#id = Math.random() * 100;
-    this.object = object;
+    this.object = gltf.scene;
     this.#currentDirection = this.#desiredDirection = forward;
     this.#velocity = new Vector3(0, 0, 0);
 
     this.object.up.copy(up);
     this.object.lookAt(this.object.position.clone().add(forward));
+    this.object.rotateY(-Math.PI / 2);
 
     const yellow = 0xffff00;
     this.#desiredDirectionArrow = new ArrowHelper(this.#desiredDirection, this.object.position, 1, yellow);
-    scene.add(this.#desiredDirectionArrow);
+    //scene.add(this.#desiredDirectionArrow);
 
     const red = 0xffff0000;
     this.#currentDirectionArrow = new ArrowHelper(this.#currentDirection, this.object.position, 1, red);
-    scene.add(this.#currentDirectionArrow);
+    //scene.add(this.#currentDirectionArrow);
 
     this.steering = steering;
+
+    this.#animationMixer = new AnimationMixer(this.object);
+    const action = this.#animationMixer.clipAction(gltf.animations[0]);
+    action.setLoop(LoopRepeat, Infinity);
+    action.startAt(Math.random() * action.getEffectiveTimeScale());
+    action.play();
   }
 
   Update(frameTime: number, speed: number) {
@@ -55,7 +65,10 @@ export class Agent {
     // Rotate agent into the direction he is moving
     if (this.#currentDirection.lengthSq() != 0) {
       this.object.lookAt(this.object.position.clone().add(this.#currentDirection));
+      this.object.rotateY(-Math.PI / 2);
     }
+
+    this.#animationMixer.update(frameTime);
   }
 
   get direction() {
