@@ -1,12 +1,12 @@
 import { Vector3 } from "three/src/math/Vector3.js";
 import { Agent } from './Agent';
+import { AgentManager } from "./AgentsManager";
 import { BoidMovement } from './BoidMovement/intex';
 import { scene } from './Game';
 import { ResourceManager, type ResourceName } from './ResourceManager';
 
 export class Swarm {
   private resourceName: ResourceName;
-  #swarm: Agent[] = [];
   speed = 10;
   #up: Vector3;
   #initScale: Vector3;
@@ -24,14 +24,7 @@ export class Swarm {
   }
 
   private Steer(agent: Agent, deltaTime: number) {
-    return BoidMovement.Steer(this.#steeringSettings, this.#swarm, agent, deltaTime);
-  }
-
-  Despawn() {
-    this.#swarm.forEach((agent: Agent) => {
-      agent.object.removeFromParent();
-    });
-    this.#swarm = [];
+    return BoidMovement.Steer(this.#steeringSettings, agent, deltaTime);
   }
 
   Spawn(size: number, timeout = 0) {
@@ -47,7 +40,7 @@ export class Swarm {
     const agent = new Agent(object, animations.values().next().value!, randomForward, this.#up, this.Steer.bind(this));
     object.position.copy(new Vector3().randomDirection().add(this.#spawnPosition));
     object.scale.copy(this.#initScale);
-    this.#swarm.push(agent);
+    AgentManager.Add(agent);
     scene.add(object);
 
     await new Promise((resolve) => {
@@ -65,7 +58,7 @@ export class Swarm {
     return Promise.allSettled(spawns);
   }
 
-  Update(frameTime: number) {
+  Update(_frameTime: number) {
     let lastBatch = new Promise<any>((resolve) => resolve(undefined));
     while(this.#toSpawn > 0) {
       const spawnThisFrame = Math.min(this.#toSpawn, 5);
@@ -74,13 +67,5 @@ export class Swarm {
       }).bind(this, spawnThisFrame));
       this.#toSpawn -= spawnThisFrame;
     }
-
-    this.#swarm.forEach((fish) => {
-      fish.Update(frameTime, this.speed);
-    });
-  }
-
-  get Size() {
-    return this.#swarm.length;
   }
 }

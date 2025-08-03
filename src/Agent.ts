@@ -11,18 +11,21 @@ export class Agent {
   #id: number;
   object: Object3D;
   steering: SteeringFunction;
+  #speed: number;
   #desiredDirection: Vector3;
   #currentDirection: Vector3;
   #desiredDirectionArrow: ArrowHelper;
   #velocity: Vector3;
   #currentDirectionArrow: ArrowHelper;
   #animationMixer: AnimationMixer;
+  IsDestroyed = false;
 
-  constructor(object: Object3D, swimAnimation: AnimationClip, forward: Vector3, up: Vector3, steering: SteeringFunction) {
+  constructor(object: Object3D, swimAnimation: AnimationClip, forward: Vector3, up: Vector3, steering: SteeringFunction, speed: number = 1) {
     this.#id = Math.random() * 100;
     this.object = object;
     this.#currentDirection = this.#desiredDirection = forward;
     this.#velocity = new Vector3(0, 0, 0);
+    this.#speed = speed;
 
     this.object.up.copy(up);
     this.object.lookAt(this.object.position.clone().add(forward));
@@ -45,12 +48,12 @@ export class Agent {
     action.play();
   }
 
-  Update(frameTime: number, speed: number) {
+  Update(frameTime: number) {
     this.#desiredDirection = this.steering(this, frameTime).normalize();
     // Change current velocity to the new velocity
     this.#currentDirection.lerp(this.#desiredDirection, frameTime * 2);
 
-    this.#velocity = this.#currentDirection.clone().multiplyScalar(speed);
+    this.#velocity = this.#currentDirection.clone().multiplyScalar(this.#speed);
     this.object.position.add(this.#velocity.clone().multiplyScalar(frameTime));
 
     // Update the arrow that shows the agents movement direction

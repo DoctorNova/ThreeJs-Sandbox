@@ -2,11 +2,9 @@ import type { Camera } from "three/src/cameras/Camera.js";
 import { DoubleSide } from "three/src/constants.js";
 import { PlaneGeometry } from "three/src/geometries/Geometries.js";
 import { ShaderMaterial } from "three/src/materials/ShaderMaterial.js";
-import { Vector2 } from "three/src/math/Vector2.js";
 import { Vector3 } from "three/src/math/Vector3.js";
 import { Mesh } from "three/src/objects/Mesh.js";
 import { UniformsUtils } from "three/src/renderers/shaders/UniformsUtils.js";
-import { RendererSetup } from "./RendererSetup";
 import fragmentShader from './shaders/ocean_skybox.frag?raw';
 import vertexShader from './shaders/ocean_skybox.vert?raw';
 
@@ -40,9 +38,6 @@ class OceanSkybox extends Mesh {
       //material: Material,
       //group: Group
     ) => {
-      material.uniforms.iResolution.value = camera.viewport;
-      material.uniforms.iTime.value = RendererSetup.GetTime();
-
       const cameraForward = new Vector3();
       camera.getWorldDirection(cameraForward);
       material.uniforms.iCameraForward.value = cameraForward;
@@ -53,8 +48,6 @@ class OceanSkybox extends Mesh {
     name: "OceanSkyboxShader",
     uniforms: {
       iCameraForward: { value: new Vector3(0, 0, -1) },
-      iResolution: { value: new Vector2(1920, 1080) },
-      iTime: { value: 0 }
     },
     vertexShader,
     fragmentShader,

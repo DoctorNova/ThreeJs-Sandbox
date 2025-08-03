@@ -1,22 +1,15 @@
 import type { Camera } from "three/src/cameras/Camera.js";
-import { Clock } from "three/src/core/Clock.js";
 import { WebGLRenderer } from "three/src/renderers/WebGLRenderer.js";
 import type { Scene } from "three/src/scenes/Scene.js";
+import { AgentManager } from "./AgentsManager";
 
 type EngineCallback = (renderer: WebGLRenderer) => void;
 type EngineFrameCallback = undefined | ((frameTime: number) => void);
 
 let renderer: WebGLRenderer;
 let onEachFrame: EngineFrameCallback;
-let clock: Clock;
-
-let mTime = 0;
 
 const resizeObservers = new Array<EngineCallback>();
-
-function GetTime() {
-  return mTime;
-}
 
 function Create(canvas: HTMLElement) {
   renderer = new WebGLRenderer({ antialias: true, canvas });
@@ -24,7 +17,6 @@ function Create(canvas: HTMLElement) {
 
 function Initialize() {
   renderer.setClearColor(0xff000000);
-  clock = new Clock();
   resizeObservers.forEach(observer => observer(renderer));
 }
 
@@ -41,10 +33,15 @@ function OnEachFrame(callback?: EngineFrameCallback) {
   onEachFrame = callback;
 }
 
+let then = 0;
 function Render(scene: Scene, camera: Camera) {
-  renderer.setAnimationLoop((time) => {
-    mTime = time / 1000;
-    onEachFrame?.(clock.getDelta());
+  renderer.setAnimationLoop((now) => {
+    now *= 0.001;  // convert to seconds
+    const deltaTime = now - then;
+    then = now;
+
+    AgentManager.Update(deltaTime)
+    onEachFrame?.(deltaTime);
     renderer.render(scene, camera);
   });
 }
@@ -65,5 +62,4 @@ export const RendererSetup = {
   OnShutdown,
   OnEachFrame,
   GetRenderer,
-  GetTime,
 };

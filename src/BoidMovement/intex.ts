@@ -1,5 +1,6 @@
 import { Vector3 } from "three/src/math/Vector3.js";
 import type { Agent } from "../Agent";
+import { AgentManager } from "../AgentsManager";
 import { AlignmentCalculator } from "./Alignment";
 import { KeepAgentCloseToAnchoringPoint } from "./Anchoring";
 import { CohesionCalculator } from "./Cohesion";
@@ -24,13 +25,13 @@ function IsInVisualRange(visualRangeSq: number, self: Agent, other: Agent) {
   return distanceSq < visualRangeSq;
 }
 
-function Steer(settings: typeof DefaultBoidSettings, all: Agent[], agent: Agent, deltaTime: number) {
+function Steer(settings: typeof DefaultBoidSettings, agent: Agent, deltaTime: number) {
   const visualRangeSq = settings.visualRange * settings.visualRange;
   const alignment = new AlignmentCalculator(agent, visualRangeSq);
   const cohersion = new CohesionCalculator(agent);
   const separation = new SeparationCalculator(agent, settings.collisionRange * settings.collisionRange);
 
-  all.forEach(other => {
+  AgentManager.ForEach(other => {
     if (other != agent && IsInVisualRange(visualRangeSq, agent, other)) {
       alignment.Evaluate(other);
       cohersion.Evaluate(other);
