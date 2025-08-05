@@ -38,7 +38,6 @@ export class Agent {
 
     this.object.up.copy(up);
     this.object.lookAt(this.position.clone().add(forward));
-    //this.object.rotateY(-Math.PI / 2);
 
     const yellow = 0xffff00;
     this.desiredDirectionArrow = new ArrowHelper(this.desiredDirection, this.position, 1, yellow);
@@ -81,7 +80,6 @@ export class Agent {
     // Rotate agent into the direction he is moving
     if (this.currentDirection.lengthSq() != 0) {
       this.object.lookAt(this.position.clone().add(this.currentDirection));
-      //this.object.rotateY(-Math.PI / 2);
     }
 
     this.animationMixer.update(frameTime);
