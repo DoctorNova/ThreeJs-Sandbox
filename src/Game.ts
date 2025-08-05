@@ -32,9 +32,9 @@ function resizeCanvasToDisplaySize(renderer: WebGLRenderer) {
   }
 }
 
-const emperorAnglefishScale = 0.5;
-const emperorAnglefishSwarm = new Swarm("emperorAnglefish", new Vector3(0, 0, 0), new Vector3(0, 1, 0), new Vector3(emperorAnglefishScale, emperorAnglefishScale, emperorAnglefishScale));
-emperorAnglefishSwarm.speed = 1;
+const emperorAnglefishScale = 1;
+const emperorAnglefishSwarm = new Swarm("fusilier", new Vector3(0, 0, 0), new Vector3(0, 1, 0), new Vector3(emperorAnglefishScale, emperorAnglefishScale, emperorAnglefishScale));
+emperorAnglefishSwarm.speed = 0.5;
 emperorAnglefishSwarm.Spawn(100, 100);
 
 const jellyfishScale = 0.001;

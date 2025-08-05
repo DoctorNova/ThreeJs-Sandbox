@@ -45,6 +45,7 @@ const models = {
   emperorAnglefish: new DeferredResource('assets/emperor_angelfish2.glb'),
   jellyfish: new DeferredResource('assets/simple_jellyfish.glb'),
   low_poly_fish: new DeferredResource('assets/low_poly_fish.glb'),
+  fusilier: new DeferredResource('assets/fusilier.glb'),
 };
 
 export type ResourceName = keyof typeof models;
