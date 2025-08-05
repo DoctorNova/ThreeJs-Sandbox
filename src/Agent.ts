@@ -1,11 +1,14 @@
-import type { AnimationClip } from "three/src/animation/AnimationClip.js";
-import { AnimationMixer } from "three/src/animation/AnimationMixer.js";
-import { LoopRepeat } from "three/src/constants.js";
-import type { Object3D } from "three/src/core/Object3D.js";
-import { ArrowHelper } from "three/src/helpers/ArrowHelper.js";
-import { MathUtils } from "three/src/math/MathUtils.js";
-import { Matrix4 } from "three/src/math/Matrix4.js";
-import { Vector3 } from "three/src/math/Vector3.js";
+import {
+  type AnimationClip,
+  AnimationMixer,
+  ArrowHelper,
+  LoopRepeat,
+  MathUtils,
+  Matrix4,
+  type Object3D,
+  Vector3,
+} from 'three';
+
 
 export type SteeringFunction = (agent: Agent, deltaTime: number) => Vector3;
 

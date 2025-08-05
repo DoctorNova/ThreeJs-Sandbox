@@ -1,11 +1,13 @@
-import type { Camera } from "three/src/cameras/Camera.js";
-import { DoubleSide } from "three/src/constants.js";
-import { PlaneGeometry } from "three/src/geometries/Geometries.js";
-import { ShaderMaterial } from "three/src/materials/ShaderMaterial.js";
-import { Vector2 } from "three/src/math/Vector2.js";
-import { Vector3 } from "three/src/math/Vector3.js";
-import { Mesh } from "three/src/objects/Mesh.js";
-import { UniformsUtils } from "three/src/renderers/shaders/UniformsUtils.js";
+import {
+  type Camera,
+  DoubleSide,
+  Mesh,
+  PlaneGeometry,
+  ShaderMaterial,
+  UniformsUtils,
+  Vector2,
+  Vector3,
+} from 'three';
 import { deepSeeDepth, directionalLight } from "./Game";
 import { RendererSetup } from "./RendererSetup";
 import fragmentShader from './shaders/ocean_skybox.frag?raw';

@@ -1,4 +1,4 @@
-import { Vector3 } from "three/src/math/Vector3.js";
+import { Vector3 } from "three";
 
 function GetBiggestDimension(scale: Vector3): number {
   return Math.max(scale.x, Math.max(scale.y, scale.z));

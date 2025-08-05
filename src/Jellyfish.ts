@@ -1,7 +1,9 @@
-import { AnimationMixer } from 'three/src/animation/AnimationMixer.js';
-import { Matrix4 } from 'three/src/math/Matrix4.js';
-import { Quaternion } from 'three/src/math/Quaternion.js';
-import { Vector3 } from 'three/src/math/Vector3.js';
+import {
+  AnimationMixer,
+  Matrix4,
+  Quaternion,
+  Vector3,
+} from 'three';
 import { scene } from './Game';
 import { ResourceManager, type ResourceName } from './ResourceManager';
 

@@ -1,9 +1,11 @@
-import { AmbientLight } from 'three/src/lights/AmbientLight.js';
-import { DirectionalLight } from 'three/src/lights/DirectionalLight.js';
-import { MathUtils } from 'three/src/math/MathUtils.js';
-import { Vector3 } from 'three/src/math/Vector3.js';
-import type { WebGLRenderer } from 'three/src/renderers/WebGLRenderer.js';
-import { Scene } from 'three/src/scenes/Scene.js';
+import {
+  AmbientLight,
+  DirectionalLight,
+  MathUtils,
+  Scene,
+  Vector3,
+  type WebGLRenderer,
+} from 'three';
 import { Jellyfish } from './Jellyfish';
 import { OceanSkybox } from './OceanSkybox';
 import { Player } from './Player/Player';

@@ -1,8 +1,8 @@
-import { Vector3 } from "three/src/math/Vector3.js";
+import * as THREE from "three";
 import type { Agent } from "../Agent";
 
 export class CohesionCalculator {
-  #center = new Vector3(0, 0);
+  #center = new THREE.Vector3(0, 0);
   #total = 0;
   #self: Agent;
 
@@ -17,7 +17,7 @@ export class CohesionCalculator {
 
   CalculateResult(coefficient: number) {
     if (this.#total == 0) {
-      return new Vector3(0, 0, 0);
+      return new THREE.Vector3(0, 0, 0);
     }
 
     const steering = this.#center
@@ -25,7 +25,7 @@ export class CohesionCalculator {
       .sub(this.#self.worldPosition);
 
     if (steering.lengthSq() == 0) {
-      return new Vector3(0, 0, 0);
+      return new THREE.Vector3(0, 0, 0);
     }
 
     return steering.normalize().multiplyScalar(coefficient);

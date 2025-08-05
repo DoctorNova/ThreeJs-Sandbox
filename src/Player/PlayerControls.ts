@@ -1,8 +1,10 @@
-import type { Object3D } from "three/src/core/Object3D.js";
-import { Controls } from "three/src/extras/Controls.js";
-import { MathUtils } from "three/src/math/MathUtils.js";
-import { Spherical } from "three/src/math/Spherical.js";
-import { Vector3 } from "three/src/math/Vector3.js";
+import {
+  type Object3D,
+  Controls,
+  MathUtils,
+  Spherical,
+  Vector3,
+} from 'three';
 
 const _lookDirection = new Vector3();
 const _spherical = new Spherical();

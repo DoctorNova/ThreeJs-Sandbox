@@ -1,6 +1,8 @@
-import type { Camera } from "three/src/cameras/Camera.js";
-import { WebGLRenderer } from "three/src/renderers/WebGLRenderer.js";
-import type { Scene } from "three/src/scenes/Scene.js";
+import {
+  WebGLRenderer,
+  type Camera,
+  type Scene,
+} from 'three';
 import { AgentManager } from "./AgentsManager";
 import { FrameTimer } from "./FrameTime";
 

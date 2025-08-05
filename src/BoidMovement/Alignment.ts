@@ -1,9 +1,8 @@
-import { MathUtils } from "three/src/math/MathUtils.js";
-import { Vector3 } from "three/src/math/Vector3.js";
+import * as THREE from "three";
 import type { Agent } from "../Agent";
 
 export class AlignmentCalculator {
-  #steering = new Vector3(0, 0);
+  #steering = new THREE.Vector3(0, 0);
   #self: Agent;
   #visualDistanceSq = 0;
   #total = 0;
@@ -15,7 +14,7 @@ export class AlignmentCalculator {
 
   Evaluate(other: Agent) {
     const distanceSq = this.#self.worldPosition.distanceToSquared(other.worldPosition);
-    const weight = MathUtils.clamp(1 - (distanceSq / this.#visualDistanceSq), 0, 1);
+    const weight = THREE.MathUtils.clamp(1 - (distanceSq / this.#visualDistanceSq), 0, 1);
     this.#steering.add(other.direction.clone().multiplyScalar(weight));
     if (weight > 0) {
       this.#total++;

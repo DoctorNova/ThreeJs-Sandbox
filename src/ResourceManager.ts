@@ -1,6 +1,9 @@
-import { GLTFLoader, type GLTF } from 'three/addons/loaders/GLTFLoader.js';
+import * as THREE from 'three';
+import {
+  GLTFLoader,
+  type GLTF,
+} from 'three/addons/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
-import * as THREE from 'three/src/Three.Core.js';
 
 type AnimationClips = Map<string, THREE.AnimationClip>;
 

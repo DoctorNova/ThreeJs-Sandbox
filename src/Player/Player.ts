@@ -1,8 +1,10 @@
-import { PerspectiveCamera } from 'three/src/cameras/PerspectiveCamera.js';
-import { Matrix4 } from 'three/src/math/Matrix4.js';
-import { Quaternion } from 'three/src/math/Quaternion.js';
-import { Vector3 } from 'three/src/math/Vector3.js';
-import type { Scene } from 'three/src/scenes/Scene.js';
+import {
+  Matrix4,
+  PerspectiveCamera,
+  Quaternion,
+  Vector3,
+  type Scene,
+} from 'three';
 import { Agent } from '../Agent';
 import { AgentManager } from '../AgentsManager';
 import { QueryParams } from '../QueryParams';
