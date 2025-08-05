@@ -1,13 +1,22 @@
-module.exports = async () => {
-  const { defineConfig } = await import('vite');
+import { readFileSync } from 'fs';
+import { defineConfig } from 'vite';
 
-  return defineConfig({
-    assetsInclude: ["**/shaders/*"],
-    plugins: [],
-    server: {
-      watch: {
-        usePolling: true,
-      },
+const packageJson = JSON.parse(readFileSync(new URL('./package.json', import.meta.url)));
+let repoName = '';
+
+if (packageJson.repository && packageJson.repository.url) {
+  // Extract repo name from URL like "https://github.com/user/repo.git"
+  const match = packageJson.repository.url.match(/\/([^\/]+?)(?:\.git)?$/);
+  if (match) repoName = match[1];
+}
+
+export default defineConfig({
+  assetsInclude: ["**/shaders/*"],
+  base: repoName ? `/${repoName}/` : '/',
+  plugins: [],
+  server: {
+    watch: {
+      usePolling: true,
     },
-  });
-};
+  },
+});
