@@ -271,10 +271,10 @@ class PlayerControls extends Controls<Event> {
 
     if (this.activeLook) {
 
-      //switch (event.button) {
-      //  case 0: this._moveForward = true; break;
-      //  case 2: this._moveBackward = true; break;
-      //}
+      switch (event.button) {
+        case 0: this._moveForward = true; break;
+        case 2: this._moveStop = true; break;
+      }
 
     }
 
@@ -286,12 +286,12 @@ class PlayerControls extends Controls<Event> {
 
     if (this.activeLook) {
 
-      //switch (event.button) {
-      //
-      //  case 0: this._moveForward = false; break;
-      //  case 2: this._moveBackward = false; break;
-      //
-      //}
+      switch (event.button) {
+      
+        case 0: this._moveForward = false; break;
+        case 2: this._moveStop = false; break;
+      
+      }
 
     }
 
