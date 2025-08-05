@@ -42,9 +42,9 @@ class DeferredResource {
 const manager = new THREE.LoadingManager();
 manager.onLoad = init;
 const models = {
-  emperorAnglefish: new DeferredResource('assets/resources/emperor_angelfish.glb'),
-  jellyfish: new DeferredResource('assets/resources/simple_jellyfish.glb'),
-  low_poly_fish: new DeferredResource('assets/resources/low_poly_fish.glb'),
+  emperorAnglefish: new DeferredResource('assets/emperor_angelfish.glb'),
+  jellyfish: new DeferredResource('assets/simple_jellyfish.glb'),
+  low_poly_fish: new DeferredResource('assets/low_poly_fish.glb'),
 };
 
 export type ResourceName = keyof typeof models;
