@@ -44,6 +44,12 @@ function Update(deltaTime: number) {
   })
 }
 
+export enum AgentGroupId {
+  player = 0,
+  fusilier = 1,
+  angelfish = 2,
+}
+
 export const AgentManager = {
   Add,
   Remove,

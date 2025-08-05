@@ -16,7 +16,7 @@ let frameTime: FrameTimer
 const resizeObservers = new Array<EngineCallback>();
 
 function Create(canvas: HTMLElement) {
-  renderer = new WebGLRenderer({ antialias: true, canvas });
+  renderer = new WebGLRenderer({ canvas });
 }
 
 function Initialize() {

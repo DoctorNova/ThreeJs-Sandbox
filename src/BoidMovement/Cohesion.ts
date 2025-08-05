@@ -11,8 +11,10 @@ export class CohesionCalculator {
   }
 
   Evaluate(other: Agent) {
-    this.#center.add(other.worldPosition);
-    this.#total++;
+    if (other.GroupId == this.#self.GroupId) {
+      this.#center.add(other.worldPosition);
+      this.#total++;
+    }
   }
 
   CalculateResult(coefficient: number) {

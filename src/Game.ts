@@ -6,7 +6,7 @@ import {
   Vector3,
   type WebGLRenderer,
 } from 'three';
-import { Jellyfish } from './Jellyfish';
+import { AgentGroupId } from './AgentsManager';
 import { OceanSkybox } from './OceanSkybox';
 import { Player } from './Player/Player';
 import { RendererSetup } from './RendererSetup';
@@ -32,13 +32,37 @@ function resizeCanvasToDisplaySize(renderer: WebGLRenderer) {
   }
 }
 
-const emperorAnglefishScale = 1;
-const emperorAnglefishSwarm = new Swarm("fusilier", new Vector3(0, 0, 0), new Vector3(0, 1, 0), new Vector3(emperorAnglefishScale, emperorAnglefishScale, emperorAnglefishScale));
-emperorAnglefishSwarm.speed = 0.5;
-emperorAnglefishSwarm.Spawn(100, 100);
+const emperorAnglefishScale = 0.5;
+const emperorAnglefishSwarm = new Swarm(AgentGroupId.angelfish, "emperorAnglefish", new Vector3(0, 0, -10), new Vector3(0, 1, 0), new Vector3(emperorAnglefishScale, emperorAnglefishScale, emperorAnglefishScale), {
+  coefficient: {
+    alignment: 1,
+    cohersion: 1,
+    separation: 3,
+    wandering: 1,
+    anchor: 1,
+  },
+  anchorPoint: new Vector3(0, 0, 0),
+  collisionRange: 1,
+  visualRange: 10,
+});
+emperorAnglefishSwarm.speed = 1;
+emperorAnglefishSwarm.Spawn(100, 10);
 
-const jellyfishScale = 0.001;
-const jellyfish = new Jellyfish("jellyfish", new Vector3(jellyfishScale, jellyfishScale, jellyfishScale));
+const fusilierScale = 3;
+const fusilierSwarm = new Swarm(AgentGroupId.angelfish, "fusilier", new Vector3(5, 0, 0), new Vector3(0, 1, 0), new Vector3(fusilierScale, fusilierScale, fusilierScale), {
+  coefficient: {
+    alignment: 1,
+    cohersion: 1,
+    separation: 3,
+    wandering: 1,
+    anchor: 1,
+  },
+  anchorPoint: new Vector3(0, 0, 0),
+  collisionRange: 0.5,
+  visualRange: 10,
+});
+fusilierSwarm.speed = 1;
+fusilierSwarm.Spawn(100, 10);
 
 const skybox = new OceanSkybox();
 
@@ -64,9 +88,9 @@ export function OnResize(renderer: WebGLRenderer) {
 }
 
 export function OnUpdate(frameTime: number) {
-  emperorAnglefishSwarm.Update(frameTime);
   player.Update(frameTime);
-  jellyfish.Update(frameTime);
+  emperorAnglefishSwarm.Update(frameTime);
+  fusilierSwarm.Update(frameTime);
 
   const cameraPosition = new Vector3();
   player.camera.getWorldPosition(cameraPosition);

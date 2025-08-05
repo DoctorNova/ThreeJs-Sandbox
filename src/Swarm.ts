@@ -4,7 +4,7 @@ import {
   Vector3,
 } from 'three';
 import { Agent } from './Agent';
-import { AgentManager } from "./AgentsManager";
+import { AgentGroupId, AgentManager } from "./AgentsManager";
 import { BoidMovement } from './BoidMovement/intex';
 import { scene } from './Game';
 import { ResourceManager, type ResourceName } from './ResourceManager';
@@ -17,14 +17,16 @@ export class Swarm {
   #spawnPosition: Vector3;
   #steeringSettings: typeof BoidMovement.DefaultBoidSettings;
   #toSpawn = 0;
+  #goupId: AgentGroupId;
   private spawningTimeout = 0;
 
-  constructor(resourceName: ResourceName, spawnPosition: Vector3, up: Vector3, scale: Vector3, steeringSettings = BoidMovement.DefaultBoidSettings) {
+  constructor(groupId: AgentGroupId, resourceName: ResourceName, spawnPosition: Vector3, up: Vector3, scale: Vector3, steeringSettings = BoidMovement.DefaultBoidSettings) {
     this.resourceName = resourceName;
     this.#initScale = scale;
     this.#up = up;
     this.#spawnPosition = spawnPosition;
     this.#steeringSettings = steeringSettings;
+    this.#goupId = groupId;
   }
 
   private Steer(agent: Agent, deltaTime: number) {
@@ -41,7 +43,7 @@ export class Swarm {
     const randomForward = new Vector3().randomDirection();
     // Meshes must have up-axis: +y and forward-axis: +z
     // In the agents contructor it is then rotated to the given forward and up vector
-    const agent = new Agent(object, animations.values().next().value!, randomForward, this.#up, this.Steer.bind(this), this.speed);
+    const agent = new Agent(this.#goupId, object, animations.values().next().value!, randomForward, this.#up, this.Steer.bind(this), this.speed);
     const translation = new Vector3().randomDirection().add(this.#spawnPosition);
     const transformation = new Matrix4().compose(translation, new Quaternion(), this.#initScale);
     object.applyMatrix4(transformation);

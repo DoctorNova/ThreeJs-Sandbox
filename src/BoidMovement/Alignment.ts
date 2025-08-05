@@ -13,11 +13,13 @@ export class AlignmentCalculator {
   }
 
   Evaluate(other: Agent) {
-    const distanceSq = this.#self.worldPosition.distanceToSquared(other.worldPosition);
-    const weight = THREE.MathUtils.clamp(1 - (distanceSq / this.#visualDistanceSq), 0, 1);
-    this.#steering.add(other.direction.clone().multiplyScalar(weight));
-    if (weight > 0) {
-      this.#total++;
+    if (other.GroupId == this.#self.GroupId) {
+      const distanceSq = this.#self.worldPosition.distanceToSquared(other.worldPosition);
+      const weight = THREE.MathUtils.clamp(1 - (distanceSq / this.#visualDistanceSq), 0, 1);
+      this.#steering.add(other.direction.clone().multiplyScalar(weight));
+      if (weight > 0) {
+        this.#total++;
+      }
     }
   }
 

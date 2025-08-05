@@ -8,6 +8,7 @@ import {
   type Object3D,
   Vector3,
 } from 'three';
+import type { AgentGroupId } from './AgentsManager';
 
 
 export type SteeringFunction = (agent: Agent, deltaTime: number) => Vector3;
@@ -23,15 +24,17 @@ export class Agent {
   private animationMixer: AnimationMixer;
   private position = new Vector3(0, 0, 0);
   private isDestroyed = false;
+  private groupId: AgentGroupId;
   steering: SteeringFunction;
   object: Object3D;
 
-  constructor(object: Object3D, swimAnimation: AnimationClip, forward: Vector3, up: Vector3, steering: SteeringFunction, speed: number = 1, turnSpeed = 1) {
+  constructor(groupId: AgentGroupId, object: Object3D, swimAnimation: AnimationClip, forward: Vector3, up: Vector3, steering: SteeringFunction, speed: number = 1, turnSpeed = 1) {
     this.id = Math.random() * 100;
     this.object = object;
     this.currentDirection = this.desiredDirection = forward;
     this.speed = speed;
     this.turnSpeed = turnSpeed;
+    this.groupId = groupId;
 
     this.position = new Vector3();
     this.object.getWorldPosition(this.position);
@@ -95,6 +98,10 @@ export class Agent {
 
   get IsDestroyed() {
     return this.isDestroyed;
+  }
+
+  get GroupId() {
+    return this.groupId;
   }
 
   SetDestroyed() {

@@ -6,7 +6,7 @@ import {
   type Scene,
 } from 'three';
 import { Agent } from '../Agent';
-import { AgentManager } from '../AgentsManager';
+import { AgentGroupId, AgentManager } from '../AgentsManager';
 import { QueryParams } from '../QueryParams';
 import { ResourceManager } from '../ResourceManager';
 import { PlayerControls } from './PlayerControls';
@@ -18,13 +18,14 @@ export class Player {
   private controls?: PlayerControls;
   
   constructor(scene: Scene, _domElement: HTMLElement) {
+    this.controls = new PlayerControls(this.camera, _domElement);
     
     ResourceManager.CreateInstance("emperorAnglefish").then((result) => {
       
       const cameraForward = new Vector3();
       this.camera.getWorldDirection(cameraForward);
       
-      this.agent = new Agent(result.object, result.animations.values().next().value!, cameraForward, this.camera.up, () => {
+      this.agent = new Agent(AgentGroupId.player, result.object, result.animations.values().next().value!, cameraForward, this.camera.up, () => {
         if (!this.agent) {
           return new Vector3(0, 0, -1);
         }
@@ -39,8 +40,10 @@ export class Player {
       const transformation = new Matrix4().compose(new Vector3(0, -0.05, -0.25).add(this.camera.position), new Quaternion(), new Vector3().setScalar(0.1));
       this.agent.object.applyMatrix4(transformation);
 
-      this.controls = new PlayerControls(this.camera, _domElement);
-      
+      // This can never happen put typescript....
+      if (!this.controls)
+        return;
+
       if (QueryParams.GetBoolean("playerControls")) {
         this.controls.canMove = true;
         AgentManager.Add(this.agent);

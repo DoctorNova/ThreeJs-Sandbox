@@ -42,9 +42,7 @@ class DeferredResource {
 const manager = new THREE.LoadingManager();
 manager.onLoad = init;
 const models = {
-  emperorAnglefish: new DeferredResource('assets/emperor_angelfish2.glb'),
-  jellyfish: new DeferredResource('assets/simple_jellyfish.glb'),
-  low_poly_fish: new DeferredResource('assets/low_poly_fish.glb'),
+  emperorAnglefish: new DeferredResource('assets/emperor_angelfish.glb'),
   fusilier: new DeferredResource('assets/fusilier.glb'),
 };
 
@@ -60,6 +58,24 @@ function LoadAll() {
   const gltfLoader = new GLTFLoader(manager);
   for (const model of Object.values(models)) {
     gltfLoader.load(model.url, (gltf: GLTF) => {
+      gltf.scene.traverse((o) => {
+        const child = o as unknown as THREE.Mesh;
+        if (child.isMesh) {
+          const cb = (m: THREE.Material) => {
+            m.depthTest = true;
+            m.depthWrite = true;
+            m.transparent = false; // or true if intentionally transparent
+          }
+
+          if (Array.isArray(child.material)) {
+            child.material.forEach(cb);
+          } else {
+            cb(child.material);
+          }
+        }
+      });
+
+
       model.Set(gltf, prepModelsAndAnimations(gltf));
 
       gltf.animations; // Array<THREE.AnimationClip>

@@ -11,7 +11,7 @@ const DefaultBoidSettings = {
   coefficient: {
     alignment: 1,
     cohersion: 1,
-    separation: 1.5,
+    separation: 3,
     wandering: 1,
     anchor: 1,
   },
