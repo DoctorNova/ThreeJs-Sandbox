@@ -24,7 +24,7 @@ function ForEach(callback: ForeachCallback) {
  */
 function Remove(agent: Agent) {
   containsDestroyed = true;
-  agent.IsDestroyed = true;
+  agent.SetDestroyed();
 }
 
 function UpdateDestroyedAgents() {

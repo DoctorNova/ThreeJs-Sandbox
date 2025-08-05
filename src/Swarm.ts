@@ -1,3 +1,5 @@
+import { Matrix4 } from "three/src/math/Matrix4.js";
+import { Quaternion } from "three/src/math/Quaternion.js";
 import { Vector3 } from "three/src/math/Vector3.js";
 import { Agent } from './Agent';
 import { AgentManager } from "./AgentsManager";
@@ -37,9 +39,10 @@ export class Swarm {
     const randomForward = new Vector3().randomDirection();
     // Meshes must have up-axis: +y and forward-axis: +z
     // In the agents contructor it is then rotated to the given forward and up vector
-    const agent = new Agent(object, animations.values().next().value!, randomForward, this.#up, this.Steer.bind(this));
-    object.position.copy(new Vector3().randomDirection().add(this.#spawnPosition));
-    object.scale.copy(this.#initScale);
+    const agent = new Agent(object, animations.values().next().value!, randomForward, this.#up, this.Steer.bind(this), this.speed);
+    const translation = new Vector3().randomDirection().add(this.#spawnPosition);
+    const transformation = new Matrix4().compose(translation, new Quaternion(), this.#initScale);
+    object.applyMatrix4(transformation);
     AgentManager.Add(agent);
     scene.add(object);
 
@@ -59,13 +62,15 @@ export class Swarm {
   }
 
   Update(_frameTime: number) {
-    let lastBatch = new Promise<any>((resolve) => resolve(undefined));
-    while(this.#toSpawn > 0) {
-      const spawnThisFrame = Math.min(this.#toSpawn, 5);
-      lastBatch = lastBatch.then(((batchSize: number) => {
-        return this.SpawnBatch(batchSize)
-      }).bind(this, spawnThisFrame));
-      this.#toSpawn -= spawnThisFrame;
+    if (this.#toSpawn > 0) {
+      let lastBatch = new Promise<any>((resolve) => resolve(undefined));
+      while(this.#toSpawn > 0) {
+        const spawnThisFrame = Math.min(this.#toSpawn, 5);
+        lastBatch = lastBatch.then(((batchSize: number) => {
+          return this.SpawnBatch(batchSize)
+        }).bind(this, spawnThisFrame));
+        this.#toSpawn -= spawnThisFrame;
+      }
     }
   }
 }

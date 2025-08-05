@@ -5,7 +5,7 @@ export function KeepAgentCloseToAnchoringPoint(anchorPoint: Vector3, agent: Agen
   if (coefficient == 0)
     return new Vector3(0, 0, 0);
 
-  const anchorDirection = anchorPoint.clone().sub(agent.object.position);
+  const anchorDirection = anchorPoint.clone().sub(agent.worldPosition);
   const anchorDistance = anchorDirection.lengthSq();
   if (anchorDistance != 0) {
     const weight = anchorDistance / visualRangeSq;

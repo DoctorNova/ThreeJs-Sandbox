@@ -2,12 +2,14 @@ import type { Camera } from "three/src/cameras/Camera.js";
 import { WebGLRenderer } from "three/src/renderers/WebGLRenderer.js";
 import type { Scene } from "three/src/scenes/Scene.js";
 import { AgentManager } from "./AgentsManager";
+import { FrameTimer } from "./FrameTime";
 
 type EngineCallback = (renderer: WebGLRenderer) => void;
 type EngineFrameCallback = undefined | ((frameTime: number) => void);
 
 let renderer: WebGLRenderer;
 let onEachFrame: EngineFrameCallback;
+let frameTime: FrameTimer
 
 const resizeObservers = new Array<EngineCallback>();
 
@@ -18,6 +20,8 @@ function Create(canvas: HTMLElement) {
 function Initialize() {
   renderer.setClearColor(0xff000000);
   resizeObservers.forEach(observer => observer(renderer));
+
+  frameTime = new FrameTimer();
 }
 
 function OnResize(callback?: EngineCallback) {
@@ -43,6 +47,9 @@ function Render(scene: Scene, camera: Camera) {
     AgentManager.Update(deltaTime)
     onEachFrame?.(deltaTime);
     renderer.render(scene, camera);
+
+    frameTime?.OnFrameEnd(deltaTime);
+    frameTime?.Render();
   });
 }
 
@@ -54,6 +61,10 @@ function GetRenderer() {
   return renderer!;
 }
 
+function GetTime() {
+  return then;
+}
+
 export const RendererSetup = {
   Create,
   Initialize,
@@ -62,4 +73,5 @@ export const RendererSetup = {
   OnShutdown,
   OnEachFrame,
   GetRenderer,
+  GetTime,
 };

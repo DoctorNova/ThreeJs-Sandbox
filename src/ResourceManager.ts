@@ -6,13 +6,13 @@ type AnimationClips = Map<string, THREE.AnimationClip>;
 
 interface AnimatedObjectResource {
   gltf: GLTF;
-  animations: AnimationClips;
+  animationClips: AnimationClips;
 }
 
-class DeferredResource<Data> {
-  private resolve: ((data: Data) => void) | undefined;
+class DeferredResource {
+  private resolve: ((data: AnimatedObjectResource) => void) | undefined;
   private reject: ((error: Error) => void) | undefined;
-  private promise = new Promise<Data>((res, rej) => {
+  private promise = new Promise<AnimatedObjectResource>((res, rej) => {
     this.resolve = res;
     this.reject = rej;
   });
@@ -27,8 +27,8 @@ class DeferredResource<Data> {
     return await this.promise;
   }
 
-  Set(data: Data) {
-    this.resolve?.(data);
+  Set(gltf: GLTF, animationClips: AnimationClips) {
+    this.resolve?.({ gltf, animationClips });
   }
 
   Fail(error: Error) {
@@ -39,8 +39,9 @@ class DeferredResource<Data> {
 const manager = new THREE.LoadingManager();
 manager.onLoad = init;
 const models = {
-  emperorAnglefish: new DeferredResource<AnimatedObjectResource>('assets/resources/emperor_angelfish_glb.glb'),
-  jellyfish: new DeferredResource<AnimatedObjectResource>('assets/resources/simple_jellyfish.glb'),
+  emperorAnglefish: new DeferredResource('assets/resources/emperor_angelfish.glb'),
+  jellyfish: new DeferredResource('assets/resources/simple_jellyfish.glb'),
+  low_poly_fish: new DeferredResource('assets/resources/low_poly_fish.glb'),
 };
 
 export type ResourceName = keyof typeof models;
@@ -55,7 +56,7 @@ function LoadAll() {
   const gltfLoader = new GLTFLoader(manager);
   for (const model of Object.values(models)) {
     gltfLoader.load(model.url, (gltf: GLTF) => {
-      model.Set({ gltf, animations: prepModelsAndAnimations(gltf) })
+      model.Set(gltf, prepModelsAndAnimations(gltf));
 
       gltf.animations; // Array<THREE.AnimationClip>
       gltf.scene; // THREE.Group
@@ -102,11 +103,12 @@ async function CreateInstance(resource: ResourceName): Promise<AnimatedObject> {
   if (!model)
     throw Error(`No resource exists with the name ${resource}`);
 
-  const data = await model.Get(); 
+  const data = await model.Get();
+  const object = SkeletonUtils.clone(data.gltf.scene);
 
   return {
-    object: SkeletonUtils.clone(data.gltf.scene),
-    animations: data.animations
+    object: object,
+    animations: data.animationClips
   };
 }
 

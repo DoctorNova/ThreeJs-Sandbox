@@ -14,7 +14,7 @@ export class SeparationCalculator {
   }
 
   Evaluate(other: Agent) {
-    const diff = this.#self.object.position.clone().sub(other.object.position);
+    const diff = this.#self.worldPosition.clone().sub(other.worldPosition);
     const distanceSq = diff.lengthSq();
 
     if (distanceSq > this.#collisionDistanceSq) {

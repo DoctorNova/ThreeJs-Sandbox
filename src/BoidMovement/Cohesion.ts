@@ -11,7 +11,7 @@ export class CohesionCalculator {
   }
 
   Evaluate(other: Agent) {
-    this.#center.add(other.object.position);
+    this.#center.add(other.worldPosition);
     this.#total++;
   }
 
@@ -22,7 +22,7 @@ export class CohesionCalculator {
 
     const steering = this.#center
       .divideScalar(this.#total)
-      .sub(this.#self.object.position);
+      .sub(this.#self.worldPosition);
 
     if (steering.lengthSq() == 0) {
       return new Vector3(0, 0, 0);

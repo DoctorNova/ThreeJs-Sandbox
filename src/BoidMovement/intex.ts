@@ -21,7 +21,7 @@ const DefaultBoidSettings = {
 }
 
 function IsInVisualRange(visualRangeSq: number, self: Agent, other: Agent) {
-  const distanceSq = self.object.position.distanceToSquared(other.object.position);
+  const distanceSq = self.worldPosition.distanceToSquared(other.worldPosition);
   return distanceSq < visualRangeSq;
 }
 

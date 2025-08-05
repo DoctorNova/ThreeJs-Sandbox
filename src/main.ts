@@ -1,4 +1,5 @@
 import * as Game from './Game';
+import { InputManager } from './InputManger';
 import { RendererSetup } from './RendererSetup';
 import { ResourceManager } from './ResourceManager';
 
@@ -10,6 +11,7 @@ RendererSetup.OnShutdown(Game.OnShutdown);
 
 ResourceManager.LoadAll();
 // Run engine
+InputManager.Initialize();
 RendererSetup.Initialize();
 Game.Initialize();
-RendererSetup.Render(Game.scene, Game.camera);
+RendererSetup.Render(Game.scene, Game.GetCamera());
